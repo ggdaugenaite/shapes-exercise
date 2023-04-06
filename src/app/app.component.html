@@ -1,0 +1,104 @@
+
+<div class="shapes">
+  <form [formGroup]="shapesListForm" (ngSubmit)="onFormSubmit()">
+    <div formArrayName="shapes">
+      <div *ngFor="let shape of shapes.controls; let i = index" [formGroupName]="i" class="shape">       
+        <ng-container *ngIf="!!shape.get('newShape')?.value; else showShapeType">
+            <p *ngIf="shape.get('type') as typeControl">
+                Shape type: 
+                <select
+                    (change)="addSpecificShapeControls(i)"
+                    formControlName="type"
+                >
+                    <option value="">Choose a shape type</option>
+                    <option value="Circle">Circle</option>
+                    <option value="Square">Square</option>
+                    <option value="Rectangle">Rectangle</option>
+                </select>
+                <br/>
+                <label *ngIf="(typeControl?.touched || typeControl?.dirty) && typeControl?.hasError('required')" class="error">
+                    Please select a shape type.
+                </label>
+            </p>
+        </ng-container>
+        <ng-template #showShapeType>
+            <h3 > {{shape.get('type')?.value}}: </h3>
+        </ng-template>
+        
+        <p *ngIf="shape.get('radius') as radiusControl">
+            Radius: <input formControlName="radius"> 
+            <br/>
+            <ng-container *ngIf="(radiusControl?.touched || radiusControl?.dirty) || shapesListForm.invalid">
+                <label *ngIf="radiusControl?.hasError('required')" class="error">
+                    Please provide radius value.<br/>
+                </label>
+                <label *ngIf="radiusControl?.hasError('min')" class="error">
+                    Please provide a positive radius value.<br/>
+                </label>
+            </ng-container>
+            <br/>
+            <label class="area">Calculated area of shape: <span *ngIf="radiusControl.valid; else invalid">{{ calculateCircleArea(radiusControl.value) }}</span></label>
+        </p>
+
+        <p *ngIf="shape.get('size') as sizeControl">
+            Size: <input formControlName="size"> 
+            <br/>
+            <ng-container *ngIf="(sizeControl?.touched || sizeControl?.dirty)">
+                <label *ngIf="sizeControl?.hasError('required')" class="error">
+                    Please provide size value.<br/>
+                </label>
+                <label *ngIf="sizeControl?.hasError('min')" class="error">
+                    Please provide a positive size value. <br/>
+                </label>
+            </ng-container>
+            <br/>
+            <label  class="area">Calculated area of shape: <span *ngIf="sizeControl.valid; else invalid">{{ calculateRectangleArea(sizeControl.value) }}</span></label>
+        </p>
+
+        <ng-container *ngIf="shape.get('length') as lengthControl">
+            <ng-container *ngIf="shape.get('width') as widthControl">
+                <p>
+                    Length: <input formControlName="length"> 
+                    <br/>
+                    <ng-container *ngIf="(lengthControl?.touched || lengthControl?.dirty)">
+                        <label *ngIf="lengthControl?.hasError('required')" class="error">
+                        Please provide length value.
+                        </label>
+                        <label *ngIf="lengthControl?.hasError('min')" class="error">
+                            Please provide a positive length value.
+                        </label>
+                    </ng-container>
+                </p>
+                <p>
+                    Width: <input formControlName="width"> 
+                    <br/>
+                    <ng-container *ngIf="(widthControl?.touched || widthControl?.dirty)">
+                        <label *ngIf="widthControl?.hasError('required')" class="error">
+                            Please provide width value.<br/>
+                        </label>
+                        <label *ngIf="widthControl?.hasError('min')" class="error">
+                            Please provide a positive width value.
+                            <br/>
+                        </label>
+                    </ng-container>
+                    <br/>
+                    <label class="area">Calculated area of shape: <span *ngIf="widthControl.valid && lengthControl.valid ; else invalid">{{ calculateRectangleArea(widthControl.value, lengthControl.value) }}</span></label>
+                </p>
+            </ng-container>
+        </ng-container>
+
+        <p> <button type="button" (click)="deleteShapeControl(i)">Delete shape</button> </p>
+      </div>
+    </div>
+    <br />
+    <button class="button-spacing" type="button" (click)="addShapeControl()">Add shape</button>
+    <button class="button-spacing"  type="submit">Update shapes</button>
+
+    <h3 *ngIf="submitted">Your shape edition have been saved!</h3>
+  </form>
+</div> 
+
+<ng-template #invalid>
+    - 
+</ng-template>
+

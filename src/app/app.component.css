@@ -1,0 +1,23 @@
+.shapes {
+    padding: 20px;
+}
+
+.shape {
+	border: 2px solid grey;
+	max-width: 350px;
+    padding: 0 30px;
+    margin: 5px 10px;
+}
+
+.error {
+    color: red;
+} 
+
+.area {
+    font-style: italic;
+    color: darkslategrey;
+} 
+
+.button-spacing {
+    margin: 5px 10px;
+}
