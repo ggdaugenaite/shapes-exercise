@@ -14,6 +14,7 @@ class Circle {
 }
 class Rectangle {
   width: number
+  length: number
 }
 
 ```
